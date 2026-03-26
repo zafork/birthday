@@ -11,11 +11,27 @@ export function ConstellationView({ photos, onPhotoClick }: { photos: Photo[], o
     // Generate pseudo-random deterministic positions so they form a nice constellation
     const nodes = useMemo(() => {
         return photos.map((p, i) => {
-            const angle = (i / photos.length) * Math.PI * 2 * 2.3; // multiple rotations
-            const radius = 25 + (Math.sin(i * 11) * 15); // radius varying 10 to 40%
-            const x = 50 + Math.cos(angle) * (radius * 1.5); // elliptic spread
-            const y = 50 + Math.sin(angle) * radius;
-            return { ...p, x: Math.max(10, Math.min(90, x)), y: Math.max(10, Math.min(90, y)) };
+            const t = (i / photos.length) * Math.PI * 2;
+
+            // X: 16 sin^3(t) -> range is [-16, 16]
+            let baseX = 16 * Math.pow(Math.sin(t), 3);
+
+            // Y: 13 cos(t) - 5 cos(2t) - 2 cos(3t) - cos(4t) 
+            // Negative to flip it upright. Range is approx [-6, 17]
+            let baseY = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+
+            // Normalize coordinates to [0, 1]
+            // X spans -16 to 16
+            let normX = (baseX + 16) / 32;
+            // The top of the lobes mathematically reaches approx -12, and bottom tip is 17. Total range = 29
+            let normY = (baseY + 12) / 29;
+
+            // Se elimina la distorsión orgánica para que la silueta del corazón sea absolutamente clara y perfecta
+            // Map to interior bounds [25%, 75%] to make the heart noticeably smaller
+            const finalX = 20 + normX * 60;
+            const finalY = 15 + normY * 70;
+
+            return { ...p, x: finalX, y: finalY };
         });
     }, [photos]);
 
@@ -30,30 +46,35 @@ export function ConstellationView({ photos, onPhotoClick }: { photos: Photo[], o
             <div className="absolute inset-0 overflow-hidden bg-surface/30 rounded-2xl">
                 <svg className="absolute inset-0 w-full h-full pointer-events-none">
                     {nodes.map((node, i) => {
-                        return nodes.slice(i + 1).map((targetNode, j) => {
-                            const dx = node.x - targetNode.x;
-                            const dy = node.y - targetNode.y;
-                            const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (i === nodes.length - 1) return null;
+                        const targetNode = nodes[i + 1];
+                        const isHoveredLine = hoveredNode === node.id || hoveredNode === targetNode.id;
 
-                            // Connect only if close enough
-                            if (dist < 35) {
-                                const isHoveredLine = hoveredNode === node.id || hoveredNode === targetNode.id;
-                                return (
-                                    <line
-                                        key={`${i}-${j}`}
-                                        x1={`${node.x}%`}
-                                        y1={`${node.y}%`}
-                                        x2={`${targetNode.x}%`}
-                                        y2={`${targetNode.y}%`}
-                                        stroke={isHoveredLine ? "var(--accent-nebula)" : "rgba(167,139,250,0.15)"}
-                                        strokeWidth={isHoveredLine ? 1.5 : 0.8}
-                                        className="transition-colors duration-500"
-                                    />
-                                );
-                            }
-                            return null;
-                        });
+                        return (
+                            <line
+                                key={`line-${i}`}
+                                x1={`${node.x}%`}
+                                y1={`${node.y}%`}
+                                x2={`${targetNode.x}%`}
+                                y2={`${targetNode.y}%`}
+                                stroke={isHoveredLine ? "var(--accent-nebula)" : "rgba(167,139,250,0.25)"}
+                                strokeWidth={isHoveredLine ? 2 : 1}
+                                className="transition-colors duration-500"
+                            />
+                        );
                     })}
+                    {/* Closes the heart loop */}
+                    {nodes.length > 1 && (
+                        <line
+                            x1={`${nodes[nodes.length - 1].x}%`}
+                            y1={`${nodes[nodes.length - 1].y}%`}
+                            x2={`${nodes[0].x}%`}
+                            y2={`${nodes[0].y}%`}
+                            stroke={hoveredNode === nodes[nodes.length - 1].id || hoveredNode === nodes[0].id ? "var(--accent-nebula)" : "rgba(167,139,250,0.25)"}
+                            strokeWidth={hoveredNode === nodes[nodes.length - 1].id || hoveredNode === nodes[0].id ? 2 : 1}
+                            className="transition-colors duration-500"
+                        />
+                    )}
                 </svg>
             </div>
 
@@ -68,8 +89,8 @@ export function ConstellationView({ photos, onPhotoClick }: { photos: Photo[], o
                             left: `${node.x}%`,
                             top: `${node.y}%`,
                             transform: "translate(-50%, -50%)",
-                            width: isHovered ? "260px" : "60px",
-                            height: isHovered ? "260px" : "60px",
+                            width: isHovered ? "280px" : "44px",
+                            height: isHovered ? "280px" : "44px",
                             zIndex: isHovered ? 50 : 10,
                             borderRadius: isHovered ? "8px" : "50%",
                         }}
@@ -92,7 +113,7 @@ export function ConstellationView({ photos, onPhotoClick }: { photos: Photo[], o
                                         className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-void via-void/90 to-transparent pt-12 pb-4 px-4"
                                     >
                                         <h4 className="font-display text-xl text-white leading-tight mb-1">{node.title}</h4>
-                                        <p className="font-mono text-[10px] text-accent-nebula tracking-widest">{node.date}</p>
+                                        <p className="font-mono text-[10px] text-accent-nebula tracking-widest uppercase">{node.category}</p>
                                     </motion.div>
                                 )}
                             </AnimatePresence>

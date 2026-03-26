@@ -62,7 +62,7 @@ export function PhotoModal({ photo, onClose, allPhotos, onNavigate }: { photo: P
                                 {photo.description}
                             </p>
                             <div className="font-mono text-[10px] md:text-xs text-accent-star tracking-widest uppercase">
-                                {photo.date} <span className="mx-2 text-text-secondary">·</span> {photo.category}
+                                {photo.category} <span className="mx-2 text-text-secondary">·</span> ARCHIVO CLASIFICADO
                             </div>
 
                             <button

@@ -121,7 +121,6 @@ export default function Home() {
                 </div>
 
                 <HeroText />
-                <Countdown />
 
                 <motion.button
                     initial={{ opacity: 0, y: 20 }}

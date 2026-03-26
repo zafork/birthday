@@ -72,12 +72,14 @@ export function HeroText() {
             </h1>
 
             <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.2, duration: 1 }}
-                className="font-display italic font-light text-[1.5rem] md:text-[1.8rem] text-text-secondary"
+                initial={{ opacity: 0, scale: 0.8, filter: "blur(10px)" }}
+                animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                transition={{ delay: 1.5, duration: 2, ease: "easeOut" }}
+                className="mt-6 md:mt-8 mb-4 z-10"
             >
-                Feliz Cumpleaños
+                <div className="font-display text-3xl md:text-5xl lg:text-6xl text-accent-star tracking-[0.2em] md:tracking-[0.3em] uppercase text-center drop-shadow-[0_0_20px_rgba(251,191,36,0.6)]">
+                    FELIZ CUMPLEAÑOS
+                </div>
             </motion.div>
         </div>
     );

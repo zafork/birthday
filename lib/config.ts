@@ -5,12 +5,12 @@
 export const config = {
   // ← EDITA AQUÍ
   birthdayPerson: {
-    name: "Nombre de Ella",          // aparece en hero, carta, loading
+    name: "Dania",          // aparece en hero, carta, loading
     // Genera la fecha de hoy automáticamente para que coincida con "ES TU DÍA"
     birthday: new Date().toISOString().split("T")[0],
   },
   author: {
-    name: "Tu Nombre",               // aparece en la firma de la carta
+    name: "Adriel",               // aparece en la firma de la carta
   },
   letter: {
     paragraphs: [

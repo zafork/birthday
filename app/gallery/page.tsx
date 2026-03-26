@@ -23,7 +23,7 @@ export default function GalleryPage() {
                     <span className="material-symbols-rounded text-accent-nebula text-4xl lg:text-5xl p-4 rounded-full bg-[rgba(167,139,250,0.05)] border border-[rgba(167,139,250,0.1)] shadow-[0_0_20px_rgba(167,139,250,0.15)]">photo_library</span>
                 </div>
                 <h1 className="font-display text-4xl md:text-5xl lg:text-6xl mb-4 text-text-primary uppercase tracking-wide leading-tight" style={{ textShadow: "0 0 20px var(--glow-purple)" }}>
-                    TRANS<br className="hidden lg:block" />MISIONES
+                    RECUERDOS
                 </h1>
                 <div className="h-[2px] w-16 bg-gradient-to-r from-accent-nebula to-transparent mb-6 block" />
                 <p className="font-body font-light italic text-text-secondary text-base lg:text-lg mb-8 max-w-[300px]">
