@@ -55,7 +55,7 @@ export function Hotspot({
     };
 
     return (
-        <group ref={groupRef} position={position} onPointerDown={handlePointerDown} className="cursor-pointer">
+        <group ref={groupRef} position={position} onPointerDown={handlePointerDown}>
             <mesh ref={innerSphereRef}>
                 <sphereGeometry args={[0.04, 16, 16]} />
                 <meshBasicMaterial color={color} depthTest={false} />
