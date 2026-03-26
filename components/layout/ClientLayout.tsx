@@ -7,6 +7,7 @@ import LoadingScreen from "./LoadingScreen";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import CustomCursor from "./CustomCursor";
+import AudioPlayer from "./AudioPlayer";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
     const [isLoading, setIsLoading] = useState(true);
@@ -15,6 +16,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     return (
         <>
             <CustomCursor />
+            <AudioPlayer />
 
             {isLoading ? (
                 <LoadingScreen onComplete={() => setIsLoading(false)} />
